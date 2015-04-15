@@ -35,6 +35,4 @@ public class Controller {
         voteCount.put(alternative, count == null ? 1 : count + 1);
         return String.format("Your vote has been placed on %s", alternative);
     }
-
-
 }
