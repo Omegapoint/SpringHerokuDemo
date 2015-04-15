@@ -1,19 +1,22 @@
 package demo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 @RestController
 public class Controller {
 
-    private final Map<String, Integer> voteCount;
+    private final AlternativeRepository alternativeRepository;
 
-    public Controller() {
-        this.voteCount = new HashMap<>();
+    @Autowired
+    public Controller(AlternativeRepository alternativeRepository) {
+        this.alternativeRepository = alternativeRepository;
     }
 
     @RequestMapping("/")
@@ -22,17 +25,21 @@ public class Controller {
     }
 
     @RequestMapping("/result")
-    public Map<String, Integer> getResult() {
-        return voteCount;
+    public Iterable<Alternative> getResult() {
+        return alternativeRepository.findAll();
     }
 
     @RequestMapping("/vote")
-    public String placeVote(@RequestParam final String alternative) {
-        if (alternative == null || alternative.trim().equals("")) {
+    public String placeVote(@RequestParam(value = "alternative", required = true) final String alternativeString) {
+        if (alternativeString.trim().equals("")) {
             return "Ogiltigt alternativ";
         }
-        Integer count = voteCount.get(alternative);
-        voteCount.put(alternative, count == null ? 1 : count + 1);
-        return String.format("Your vote has been placed on %s", alternative);
+        Alternative alternative = alternativeRepository.findByAlternative(alternativeString);
+        if (alternative == null) {
+            alternative = new Alternative(alternativeString);
+        }
+        alternative.increaseCount();
+        alternativeRepository.save(alternative);
+        return String.format("Your vote has been placed on %s", alternativeString);
     }
 }

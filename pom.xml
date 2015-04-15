@@ -28,6 +28,19 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId> <!-- JPA-model -->
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId> <!-- Repository -->
+            <artifactId>spring-data-rest-core</artifactId>
+            <version>2.2.1.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId> <!-- Database driver -->
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
 	</dependencies>
 	
 	<build>
